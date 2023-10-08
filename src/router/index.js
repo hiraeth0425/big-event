@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useUserStore } from '../stores'
 
 // createRouter 創建路由實例
 // 配置 history模式
@@ -38,6 +39,19 @@ const router = createRouter({
       ]
     }
   ]
+})
+
+// 全局前置守衛 登入訪問攔截
+// 根據返回值決定, 是放行還是攔截
+// 返回值:
+// 1. underfined / true 直接放行
+
+router.beforeEach(async (to) => {
+  const useStore = useUserStore()
+  if (!useStore.token && to.path !== '/login') {
+    return '/login'
+  }
+  return true
 })
 
 export default router
