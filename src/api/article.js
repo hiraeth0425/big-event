@@ -8,3 +8,11 @@ export const addArtcleClass = (data) => request.post('/my/cate/add', data)
 
 // 編輯文章分類
 export const changeArticleClass = (data) => request.put('/my/cate/info', data)
+
+// 刪除文章分類
+export const derArticleClass = (id) =>
+  request.delete('/my/cate/del', {
+    params: {
+      id
+    }
+  })

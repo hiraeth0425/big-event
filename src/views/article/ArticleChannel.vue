@@ -1,8 +1,9 @@
 <script setup>
 import { ref } from 'vue'
-import { getArticleClass } from '@/api/article.js'
+import { getArticleClass, derArticleClass } from '@/api/article.js'
 import { Edit, Delete } from '@element-plus/icons-vue'
 import ChannelEdit from './components/ChannelEdit.vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
 
 // loading
 const loading = ref(false)
@@ -21,8 +22,16 @@ const getArticleList = async () => {
 getArticleList()
 
 // 編輯, 刪除 按鈕
-const handleDel = (row, $index) => {
-  console.log(row, $index)
+const handleDel = async (row) => {
+  // console.log(row, $index)
+  ElMessageBox.confirm('你確認要刪除嗎?', '溫馨提示', {
+    confirmButtonText: '確認',
+    cancelButtonText: '取消',
+    type: 'warning'
+  })
+  await derArticleClass(row.id)
+  ElMessage.success('刪除成功')
+  getArticleList()
 }
 const handleEdit = (row) => {
   // console.log(row, $index)
