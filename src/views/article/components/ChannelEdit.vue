@@ -62,7 +62,11 @@ defineExpose({
 
 <template>
   <!-- dialog -->
-  <el-dialog v-model="dialogVisible" title="新增分類" width="30%">
+  <el-dialog
+    v-model="dialogVisible"
+    :title="formModel.id ? '編輯分類' : '添加分類'"
+    width="30%"
+  >
     <!-- <span>我是內容</span> -->
     <el-form
       ref="formRef"
