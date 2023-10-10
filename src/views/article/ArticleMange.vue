@@ -5,6 +5,7 @@ import ChannelSelect from './components/ChannelSelect.vue'
 import { getArticleService } from '@/api/article.js'
 import { formatTime } from '@/utils/format.js'
 
+const loading = ref(false)
 const articleList = ref([]) //文章列表
 const totalPage = ref(0) //總條數
 
@@ -19,7 +20,9 @@ const params = ref({
 
 // 獲取文章管理頁面
 const getArticleData = async () => {
+  loading.value = true
   const res = await getArticleService(params.value)
+  loading.value = false
   totalPage.value = res.data.total
   articleList.value = res.data.data
   // console.log(articleList.value)
@@ -39,6 +42,18 @@ const onCurrentChange = (page) => {
   // 更新當前頁
   params.value.pagenum = page
   // 基於最新的當前頁, 渲染數據
+  getArticleData()
+}
+
+// 搜索 和 重置 按鈕邏輯 => 按照最新的條件, 重新檢索, 從第一頁開始檢視
+const onSearch = () => {
+  params.value.pagenum = 1
+  getArticleData()
+}
+const onReset = () => {
+  params.value.pagenum = 1
+  params.value.cate_id = ''
+  params.value.state = ''
   getArticleData()
 }
 
@@ -73,8 +88,8 @@ const onDelArticle = (row) => {
 
         <!-- <ChannelSelect v-model:modelValue="params.cateId"></ChannelSelect> -->
 
-        <!-- Vue3 => v-mode:cid :cid 和 @update 的簡寫 -->
-        <ChannelSelect v-model:cid="params.cateId"></ChannelSelect>
+        <!-- Vue3 => v-model:cid :cid 和 @update 的簡寫 -->
+        <ChannelSelect v-model:cid="params.cate_id"></ChannelSelect>
       </el-form-item>
       <el-form-item label="發布狀態">
         <!-- 這裡後臺標記發布狀態, 就是通過中文標記的, 已發布 / 草稿 -->
@@ -84,12 +99,12 @@ const onDelArticle = (row) => {
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary">搜索</el-button>
-        <el-button>重置</el-button>
+        <el-button type="primary" @click="onSearch">搜索</el-button>
+        <el-button @click="onReset">重置</el-button>
       </el-form-item>
     </el-form>
     <!-- 表格區域 -->
-    <el-table :data="articleList">
+    <el-table :data="articleList" v-loading="loading">
       <el-table-column label="文章標題" prop="title">
         <template #default="{ row }">
           <el-link type="primary" :underline="false">{{ row.title }}</el-link>
@@ -126,7 +141,7 @@ const onDelArticle = (row) => {
     <el-pagination
       v-model:current-page="params.pagenum"
       v-model:page-size="params.pagesize"
-      :page-sizes="[3, 6, 8, 10]"
+      :page-sizes="[2, 4, 6, 8]"
       :background="true"
       layout="jumper, total, sizes, prev, pager, next"
       :total="totalPage"
