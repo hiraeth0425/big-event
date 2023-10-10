@@ -2,32 +2,45 @@
 import { ref } from 'vue'
 import { Delete, Edit } from '@element-plus/icons-vue'
 import ChannelSelect from './components/ChannelSelect.vue'
+import { getArticleService } from '@/api/article.js'
+import { formatTime } from '@/utils/format.js'
 
-const articleList = [
-  {
-    Id: 5961,
-    title: '新的文章啊',
-    pub_date: '2022-07-10 14:53:52.604',
-    state: '已发布',
-    cate_name: '体育'
-  },
-  {
-    Id: 5962,
-    title: '新的文章啊',
-    pub_date: '2022-07-10 14:54:30.904',
-    state: '草稿',
-    cate_name: '体育'
-  }
-]
+const articleList = ref([]) //文章列表
+const totalPage = ref(0) //總條數
+
 // 定義請求參數對象
-
 // const cateId = ref(63255)
 const params = ref({
-  pagenum: 1,
-  pagesize: 5,
+  pagenum: 1, // 當前頁碼數
+  pagesize: 5, // 數據條數
   cate_id: '',
   state: ''
 })
+
+// 獲取文章管理頁面
+const getArticleData = async () => {
+  const res = await getArticleService(params.value)
+  totalPage.value = res.data.total
+  articleList.value = res.data.data
+  // console.log(articleList.value)
+}
+getArticleData()
+
+// 處理分頁邏輯
+const onSizeChange = (size) => {
+  // console.log('當前每頁條數', size)
+  // 只要是每頁條樹變化了, 那麼原本正在訪問的當前頁意義不大了, 數據已經不在那一頁了
+  // 重新從第一頁渲染即可
+  params.value.pagenum = 1
+  params.value.pagesize = size
+  getArticleData()
+}
+const onCurrentChange = (page) => {
+  // 更新當前頁
+  params.value.pagenum = page
+  // 基於最新的當前頁, 渲染數據
+  getArticleData()
+}
 
 // 編輯邏輯
 const onEditArticle = (row) => {
@@ -83,7 +96,11 @@ const onDelArticle = (row) => {
         </template>
       </el-table-column>
       <el-table-column label="分類" prop="cate_name"></el-table-column>
-      <el-table-column label="發表時間" prop="pub_date"></el-table-column>
+      <el-table-column label="發表時間" prop="pub_date">
+        <template #default="{ row }">
+          {{ formatTime(row.pub_date) }}
+        </template>
+      </el-table-column>
       <el-table-column label="狀態" prop="state"></el-table-column>
       <el-table-column label="操作">
         <!-- 利用作用域插槽 row 可以獲取當前行的數據 => v-for 遍歷 item -->
@@ -105,6 +122,18 @@ const onDelArticle = (row) => {
         </template>
       </el-table-column>
     </el-table>
+    <!-- 分頁 -->
+    <el-pagination
+      v-model:current-page="params.pagenum"
+      v-model:page-size="params.pagesize"
+      :page-sizes="[3, 6, 8, 10]"
+      :background="true"
+      layout="jumper, total, sizes, prev, pager, next"
+      :total="totalPage"
+      @size-change="onSizeChange"
+      @current-change="onCurrentChange"
+      style="margin-top: 20px; justify-content: end"
+    />
   </pageContainer>
 </template>
 
