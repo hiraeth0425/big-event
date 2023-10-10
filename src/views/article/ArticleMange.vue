@@ -2,12 +2,28 @@
 import { ref } from 'vue'
 import { Delete, Edit } from '@element-plus/icons-vue'
 import ChannelSelect from './components/ChannelSelect.vue'
+import ArticleEdit from './components/ArticleEdit.vue'
 import { getArticleService } from '@/api/article.js'
 import { formatTime } from '@/utils/format.js'
 
 const loading = ref(false)
 const articleList = ref([]) //文章列表
 const totalPage = ref(0) //總條數
+
+const drawer = ref()
+// 發布文章
+const onPost = () => {
+  drawer.value.open({})
+}
+
+// 編輯邏輯
+const onEditArticle = (row) => {
+  drawer.value.open(row)
+}
+// 刪除邏輯
+const onDelArticle = (row) => {
+  console.log(row)
+}
 
 // 定義請求參數對象
 // const cateId = ref(63255)
@@ -57,14 +73,6 @@ const onReset = () => {
   getArticleData()
 }
 
-// 編輯邏輯
-const onEditArticle = (row) => {
-  console.log(row)
-}
-// 刪除邏輯
-const onDelArticle = (row) => {
-  console.log(row)
-}
 /**
  * 目標: 使用v-model跟子組件下拉選擇框綁定, 得到選擇id值 (作為傳參)
  *
@@ -78,7 +86,7 @@ const onDelArticle = (row) => {
 <template>
   <pageContainer title="文章管理">
     <template #extra>
-      <el-button type="primary">發布文章</el-button>
+      <el-button type="primary" @click="onPost">發布文章</el-button>
     </template>
     <!-- 表單區域 -->
     <el-form inline>
@@ -149,6 +157,7 @@ const onDelArticle = (row) => {
       @current-change="onCurrentChange"
       style="margin-top: 20px; justify-content: end"
     />
+    <ArticleEdit ref="drawer"></ArticleEdit>
   </pageContainer>
 </template>
 
