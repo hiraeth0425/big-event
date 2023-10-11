@@ -2,6 +2,8 @@
 import { ref } from 'vue'
 import ChannelSelect from './ChannelSelect.vue'
 import { Plus } from '@element-plus/icons-vue'
+import { QuillEditor } from '@vueup/vue-quill'
+import '@vueup/vue-quill/dist/vue-quill.snow.css'
 
 const drawer = ref(false)
 
@@ -107,7 +109,16 @@ defineExpose({
         </el-upload>
       </el-form-item>
       <!-- 文章內容 -->
-      <el-form-item label="文章內容">富文本編輯器</el-form-item>
+      <el-form-item label="文章內容">
+        <!-- 富文本編輯器 -->
+        <div class="editor">
+          <QuillEditor
+            theme="snow"
+            v-model:content="postFromModel.content"
+            content-type="html"
+          ></QuillEditor>
+        </div>
+      </el-form-item>
       <el-button type="primary">發布</el-button>
       <el-button type="info">草稿</el-button>
     </el-form>
@@ -140,6 +151,13 @@ defineExpose({
       height: 178px;
       text-align: center;
     }
+  }
+}
+// 富文本編輯器
+.editor {
+  width: 100%;
+  :deep(.ql-editor) {
+    min-height: 200px;
   }
 }
 </style>
