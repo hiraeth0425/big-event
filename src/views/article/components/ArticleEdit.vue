@@ -4,6 +4,8 @@ import ChannelSelect from './ChannelSelect.vue'
 import { Plus } from '@element-plus/icons-vue'
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css'
+import { getPublishService } from '@/api/article.js'
+import { ElMessage } from 'element-plus'
 
 const drawer = ref(false)
 
@@ -17,7 +19,6 @@ const defaultForm = {
 }
 // 發布文章 表單數據
 const postFromModel = ref({ ...defaultForm })
-
 const rules = {
   title: [
     {
@@ -35,24 +36,54 @@ const rules = {
   ]
 }
 
+// 圖片上傳邏輯
+const imgUrl = ref('')
+const onSelectPic = (uploadFile) => {
+  // console.log(uploadFile)
+  imgUrl.value = URL.createObjectURL(uploadFile.raw) //預覽圖片
+  postFromModel.value.cover_img = uploadFile.raw
+}
+
+// 發布 和 草稿 點擊事件
+// const formModel = ref('')
+const emit = defineEmits(['success'])
+
+const onPublish = async (state) => {
+  // 將已發布還是草稿狀態, 存入postFromModel
+  postFromModel.value.state = state
+  // 注意: 當前接口, 需要的是 formData 對象
+  // 將普通對象 => 轉換成 => formData對象
+  const fd = new FormData()
+  for (let key in postFromModel.value) {
+    fd.append(key, postFromModel.value[key])
+  }
+  // 發請求
+  if (postFromModel.value.id) {
+    // 編輯操作
+  } else {
+    // 添加操作
+    await getPublishService(fd) // 必須發formData 對象
+    drawer.value = false
+    ElMessage.success('添加成功')
+    // 通知父組件, 添加成功了
+    emit('success', 'add')
+  }
+}
+
+const edittorRef = ref()
 const open = (row) => {
   drawer.value = true
-  console.log(row)
+  // console.log(row)
   if (row.id) {
     // 需要基於 row.id 發送請求, 獲取編輯對應的詳情數據, 進行回顯
     // console.log('編輯回顯')
   } else {
     postFromModel.value = { ...defaultForm } // 基於默認的數據, 重置form數據
     // console.log('添加')
+    // 這裡重置了表單的數據, 但是圖片上傳的img地址, 富文本編輯器內容 => 需要手動重置
+    imgUrl.value = ''
+    edittorRef.value.setHTML('')
   }
-}
-
-// 圖片上傳邏輯
-const imgUrl = ref('')
-
-const onSelectPic = (uploadFile) => {
-  // console.log(uploadFile)
-  imgUrl.value = URL.createObjectURL(uploadFile.raw) //預覽圖片
 }
 
 defineExpose({
@@ -69,6 +100,14 @@ defineExpose({
  *  3. 一打開默認重置添加的from表單數據
  *  4. 擴展下拉菜單 width (props)
  * * */
+/***
+ * 目標: 添加文章功能
+ *  1. 封裝添加接口
+ *  2. 註冊點擊事件調用
+ *  3. 父組件監聽事件, 重新渲染
+ *  4. 添加編輯完成後的內容重置
+ *  (可以自己實現的功能 => 表單提交驗證 圖片和富文本 非空驗證)
+ * */
 </script>
 
 <template>
@@ -80,7 +119,12 @@ defineExpose({
     size="50%"
   >
     <!-- 表單開始 -->
-    <el-form :model="postFromModel" :rules="rules" style="margin-left: 20px">
+    <el-form
+      ref="formModel"
+      :model="postFromModel"
+      :rules="rules"
+      style="margin-left: 20px"
+    >
       <el-form-item label="文章標題" prop="title">
         <el-input
           placeholder="請輸入標題"
@@ -113,14 +157,15 @@ defineExpose({
         <!-- 富文本編輯器 -->
         <div class="editor">
           <QuillEditor
+            ref="edittorRef"
             theme="snow"
             v-model:content="postFromModel.content"
-            content-type="html"
+            contentType="html"
           ></QuillEditor>
         </div>
       </el-form-item>
-      <el-button type="primary">發布</el-button>
-      <el-button type="info">草稿</el-button>
+      <el-button @click="onPublish('已发布')" type="primary">發布</el-button>
+      <el-button @click="onPublish('草稿')" type="info">草稿</el-button>
     </el-form>
   </el-drawer>
 </template>

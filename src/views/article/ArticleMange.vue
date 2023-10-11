@@ -74,6 +74,20 @@ const onReset = () => {
   getArticleData()
 }
 
+// 添加或者編輯 成功的emit 回調
+const onSuccess = (type) => {
+  if (type === 'add') {
+    // 如果是添加, 最好渲染最後一頁
+    const lastPage = Math.ceil((totalPage.value + 1) / params.value.pagesize) // {總條數+1/數據條數)
+    // 更新成最大頁碼數, 再渲染
+    params.value.pagenum = lastPage
+    getArticleData()
+  } else {
+    // 如果是編輯,直接渲染當前頁即可
+    getArticleData()
+  }
+}
+
 /**
  * 目標: 使用v-model跟子組件下拉選擇框綁定, 得到選擇id值 (作為傳參)
  *
@@ -158,7 +172,7 @@ const onReset = () => {
       @current-change="onCurrentChange"
       style="margin-top: 20px; justify-content: end"
     />
-    <ArticleEdit ref="drawer"></ArticleEdit>
+    <ArticleEdit ref="drawer" @success="onSuccess"></ArticleEdit>
   </pageContainer>
 </template>
 
