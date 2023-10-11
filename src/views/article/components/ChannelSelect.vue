@@ -5,6 +5,9 @@ import { getArticleClass } from '@/api/article.js'
 defineProps({
   cid: {
     type: [Number, String]
+  },
+  width: {
+    type: String
   }
 })
 
@@ -21,7 +24,11 @@ getArticleList()
 <template>
   <!-- label 展示給用戶看的, value 收集起來提交給後台的 -->
   <!-- Vue3 => v-model  :modelValue 和 @update:modelValue 的簡寫 -->
-  <el-select :modelValue="cid" @update:modelValue="emit('update:cid', $event)">
+  <el-select
+    :style="{ width }"
+    :modelValue="cid"
+    @update:modelValue="emit('update:cid', $event)"
+  >
     <el-option
       v-for="channel in articleList"
       :key="channel.id"
