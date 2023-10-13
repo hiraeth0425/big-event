@@ -4,8 +4,14 @@ import ChannelSelect from './ChannelSelect.vue'
 import { Plus } from '@element-plus/icons-vue'
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css'
-import { getPublishService } from '@/api/article.js'
+import {
+  getPublishService,
+  getPublicDetailService,
+  editArticleDetailService
+} from '@/api/article.js'
 import { ElMessage } from 'element-plus'
+import { baseURL } from '@/utils/request.js'
+import axios from 'axios'
 
 const drawer = ref(false)
 
@@ -31,6 +37,20 @@ const rules = {
     {
       required: true,
       message: '請選擇文章分類',
+      trigger: 'change'
+    }
+  ],
+  cover_img: [
+    {
+      required: true,
+      message: '請選擇上傳圖片',
+      trigger: 'blur'
+    }
+  ],
+  content: [
+    {
+      required: true,
+      message: '請輸入內容',
       trigger: 'blur'
     }
   ]
@@ -45,10 +65,13 @@ const onSelectPic = (uploadFile) => {
 }
 
 // 發布 和 草稿 點擊事件
-// const formModel = ref('')
+const formModel = ref('')
+
 const emit = defineEmits(['success'])
 
 const onPublish = async (state) => {
+  // 表單校驗
+  await formModel.value.validate()
   // 將已發布還是草稿狀態, 存入postFromModel
   postFromModel.value.state = state
   // 注意: 當前接口, 需要的是 formData 對象
@@ -60,6 +83,10 @@ const onPublish = async (state) => {
   // 發請求
   if (postFromModel.value.id) {
     // 編輯操作
+    await editArticleDetailService(fd)
+    drawer.value = false
+    ElMessage.success('修改成功')
+    emit('success', 'edit')
   } else {
     // 添加操作
     await getPublishService(fd) // 必須發formData 對象
@@ -71,12 +98,18 @@ const onPublish = async (state) => {
 }
 
 const edittorRef = ref()
-const open = (row) => {
+const open = async (row) => {
   drawer.value = true
   // console.log(row)
   if (row.id) {
     // 需要基於 row.id 發送請求, 獲取編輯對應的詳情數據, 進行回顯
-    // console.log('編輯回顯')
+    const res = await getPublicDetailService(row.id)
+    console.log(res.data)
+    postFromModel.value = res.data.data
+    // 圖片單獨處理回顯
+    imgUrl.value = baseURL + postFromModel.value.cover_img
+    // 注意: 提交給後台, 需要的數據格式, 是file對象格式
+    // 需要將網路圖片地址 => 轉換成file對象, 存儲起來
   } else {
     postFromModel.value = { ...defaultForm } // 基於默認的數據, 重置form數據
     // console.log('添加')
@@ -84,6 +117,29 @@ const open = (row) => {
     imgUrl.value = ''
     edittorRef.value.setHTML('')
   }
+  // 將網路圖片地址,轉換成file對象
+  // 网络图片的URL
+  const imageUrl = imgUrl.value
+
+  // 使用axios下载图片数据
+  axios
+    .get(imageUrl, { responseType: 'arraybuffer' })
+    .then((response) => {
+      // 将图片数据转换为Blob对象
+      const imageBlob = new Blob([response.data], { type: 'image/jpeg' })
+
+      // 创建一个File对象
+      const imageFile = new File([imageBlob], 'image.jpg', {
+        type: 'image/jpeg'
+      })
+
+      // 现在你可以使用imageFile作为File对象，进行上传或其他操作
+      // console.log(imageFile)
+      postFromModel.value.cover_img = imageFile
+    })
+    .catch((error) => {
+      console.error('下载图片时发生错误：', error)
+    })
 }
 
 defineExpose({
@@ -138,7 +194,7 @@ defineExpose({
         ></ChannelSelect>
       </el-form-item>
       <!-- 文章封面 -->
-      <el-form-item label="文章封面">
+      <el-form-item label="文章封面" prop="cover_img">
         <!-- 此處需要關閉 element-plus 的自動上傳, 不需要配置 action 等參數
              只需要做前端的本地預覽圖片即可, 無須再提交前上船圖標
         -->
@@ -153,7 +209,7 @@ defineExpose({
         </el-upload>
       </el-form-item>
       <!-- 文章內容 -->
-      <el-form-item label="文章內容">
+      <el-form-item label="文章內容" prop="content">
         <!-- 富文本編輯器 -->
         <div class="editor">
           <QuillEditor

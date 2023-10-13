@@ -24,7 +24,7 @@ getArticleList()
 // 編輯, 刪除 按鈕
 const handleDel = async (row) => {
   // console.log(row, $index)
-  ElMessageBox.confirm('你確認要刪除嗎?', '溫馨提示', {
+  await ElMessageBox.confirm('你確認要刪除嗎?', '溫馨提示', {
     confirmButtonText: '確認',
     cancelButtonText: '取消',
     type: 'warning'

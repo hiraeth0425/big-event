@@ -21,6 +21,13 @@ export const derArticleClass = (id) =>
 export const getArticleService = (params) =>
   request.get('/my/article/list', { params })
 
-// 文章: 發布文章列表
-// 注意 data 需要是一個 formData 格式的對象
+// 文章: 發布文章列表    注意 data 需要是一個 formData 格式的對象
 export const getPublishService = (data) => request.post('/my/article/add', data)
+
+// 文章: 獲取文章詳情
+export const getPublicDetailService = (id) =>
+  request.get('/my/article/info', { params: { id } })
+
+// 文章: 更新文章詳情   注意 data 需要是一個 formData 格式的對象
+export const editArticleDetailService = (data) =>
+  request.put('/my/article/info', data)
