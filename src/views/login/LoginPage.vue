@@ -10,8 +10,8 @@ const isRegister = ref(false)
 const form = ref()
 // 註冊 - 整個用於提交的form數據對象
 const formModel = ref({
-  username: 'test5173',
-  password: 'test5173',
+  username: '',
+  password: '',
   repassword: ''
 })
 // 整個表單的校驗規則
@@ -193,7 +193,7 @@ const changeRemember = () => {
         v-else
       >
         <el-form-item>
-          <h1>登录</h1>
+          <h1>登入</h1>
         </el-form-item>
         <el-form-item prop="username">
           <el-input
