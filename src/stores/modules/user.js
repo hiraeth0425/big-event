@@ -27,13 +27,21 @@ export const useUserStore = defineStore(
       userInfo.value = obj
     }
 
+    // 用戶帳號密碼持久化
+    const userAccount = ref({})
+    const setUserAccount = (obj) => {
+      userAccount.value = obj
+    }
+
     return {
       token,
       setToken,
       removeToken,
       userInfo,
       UserInfoAction,
-      changeUserInfo
+      changeUserInfo,
+      userAccount,
+      setUserAccount
     }
   },
   {

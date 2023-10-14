@@ -68,6 +68,7 @@ const register = async () => {
 
 const userStore = useUserStore()
 const router = useRouter()
+const remember = ref(false)
 const login = async () => {
   // 登入前校驗
   await form.value.validate()
@@ -85,6 +86,29 @@ watch(isRegister, () => {
     repassword: ''
   }
 })
+
+// 如果userAccount有值, 就把值賦值給formModel
+watch(
+  userStore.userAccount,
+  (newVal) => {
+    if (newVal) {
+      remember.value = true
+      formModel.value = newVal
+    }
+  },
+  { immediate: true }
+)
+
+// 記住我 勾選框 變化的時候, 進行本地持久化
+const changeRemember = () => {
+  if (remember.value === false) {
+    // 如果FALSE formModel對象內容清空
+    userStore.setUserAccount({})
+  } else {
+    // 如果TRUE formModel對象內容本地持久化
+    userStore.setUserAccount(formModel.value)
+  }
+}
 </script>
 
 <template>
@@ -175,7 +199,7 @@ watch(isRegister, () => {
           <el-input
             v-model="formModel.username"
             :prefix-icon="User"
-            placeholder="請輸入用戶名"
+            placeholder="請輸入用戶名 已註冊測試帳號:test5173"
           ></el-input>
         </el-form-item>
         <el-form-item prop="password">
@@ -184,12 +208,14 @@ watch(isRegister, () => {
             name="password"
             :prefix-icon="Lock"
             type="password"
-            placeholder="請輸入密碼"
+            placeholder="請輸入密碼 已註冊測試密碼:test5173"
           ></el-input>
         </el-form-item>
         <el-form-item class="flex">
           <div class="flex">
-            <el-checkbox>記住我</el-checkbox>
+            <el-checkbox v-model="remember" @change="changeRemember"
+              >記住我</el-checkbox
+            >
             <el-link type="primary" :underline="false">忘記密碼?</el-link>
           </div>
         </el-form-item>
