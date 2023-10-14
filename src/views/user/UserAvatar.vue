@@ -4,7 +4,6 @@ import pageContainer from '@/components/pageContainer.vue'
 import { Plus, Upload } from '@element-plus/icons-vue'
 import { useUserStore } from '@/stores'
 import { updateUserPhotoService } from '@/api/user.js'
-import { ElMessage } from 'element-plus'
 
 const UserStore = useUserStore()
 const uploadRef = ref()
@@ -36,9 +35,8 @@ const onUploadAvatar = async () => {
       ref="uploadRef"
       class="avatar-uploader"
       :show-file-list="false"
-      auto-upload="false"
+      :auto-upload="false"
       :on-change="handleChange"
-      :on-success="handleAvatarSuccess"
       style="margin-bottom: 30px"
     >
       <img v-if="imgUrl" :src="imgUrl" class="avatar" />

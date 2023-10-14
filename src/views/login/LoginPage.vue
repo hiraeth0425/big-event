@@ -10,8 +10,8 @@ const isRegister = ref(false)
 const form = ref()
 // 註冊 - 整個用於提交的form數據對象
 const formModel = ref({
-  username: '',
-  password: '',
+  username: 'test5173',
+  password: 'test5173',
   repassword: ''
 })
 // 整個表單的校驗規則
@@ -176,7 +176,6 @@ watch(isRegister, () => {
             v-model="formModel.username"
             :prefix-icon="User"
             placeholder="請輸入用戶名"
-            value="test5173"
           ></el-input>
         </el-form-item>
         <el-form-item prop="password">
@@ -186,7 +185,6 @@ watch(isRegister, () => {
             :prefix-icon="Lock"
             type="password"
             placeholder="請輸入密碼"
-            value="test5173"
           ></el-input>
         </el-form-item>
         <el-form-item class="flex">

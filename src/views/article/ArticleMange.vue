@@ -121,7 +121,7 @@ const onSuccess = (type) => {
       <el-form-item label="發布狀態">
         <!-- 這裡後臺標記發布狀態, 就是通過中文標記的, 已發布 / 草稿 -->
         <el-select v-model="params.state">
-          <el-option label="已發布" value="已發布"></el-option>
+          <el-option label="已發布" value="已发布"></el-option>
           <el-option label="草稿" value="草稿"></el-option>
         </el-select>
       </el-form-item>
