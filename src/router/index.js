@@ -35,6 +35,11 @@ const router = createRouter({
         {
           path: 'user/profile',
           component: () => import('@/views/user/UserProfile.vue')
+        },
+        {
+          path: '/:pathMatch(.*)*', // 404路由匹配
+          component: () => import('@/components/NotFound.vue'),
+          redirect: 'article/manage'
         }
       ]
     }
