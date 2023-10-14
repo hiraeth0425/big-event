@@ -3,8 +3,9 @@ import { ref } from 'vue'
 import { Delete, Edit } from '@element-plus/icons-vue'
 import ChannelSelect from './components/ChannelSelect.vue'
 import ArticleEdit from './components/ArticleEdit.vue'
-import { getArticleService } from '@/api/article.js'
+import { getArticleService, delArticleDetailService } from '@/api/article.js'
 import { formatTime } from '@/utils/format.js'
+import { ElMessage } from 'element-plus'
 
 const loading = ref(false)
 const articleList = ref([]) //文章列表
@@ -22,8 +23,11 @@ const onEditArticle = (row) => {
   drawer.value.open(row)
 }
 // 刪除邏輯
-const onDelArticle = (row) => {
-  console.log(row)
+const onDelArticle = async (row) => {
+  // console.log(row)
+  await delArticleDetailService(row.id)
+  ElMessage.success('刪除成功')
+  getArticleData(params.value)
 }
 
 // 定義請求參數對象

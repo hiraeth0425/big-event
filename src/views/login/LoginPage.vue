@@ -118,13 +118,13 @@ watch(isRegister, () => {
         v-if="isRegister"
       >
         <el-form-item>
-          <h1>注册</h1>
+          <h1>註冊</h1>
         </el-form-item>
         <el-form-item prop="username">
           <el-input
             v-model="formModel.username"
             :prefix-icon="User"
-            placeholder="请输入用户名"
+            placeholder="請輸入用戶名"
           ></el-input>
         </el-form-item>
         <el-form-item prop="password">
@@ -132,7 +132,7 @@ watch(isRegister, () => {
             v-model="formModel.password"
             :prefix-icon="Lock"
             type="password"
-            placeholder="请输入密码"
+            placeholder="請輸入密碼"
           ></el-input>
         </el-form-item>
         <el-form-item prop="repassword">
@@ -140,7 +140,7 @@ watch(isRegister, () => {
             v-model="formModel.repassword"
             :prefix-icon="Lock"
             type="password"
-            placeholder="请输入再次密码"
+            placeholder="請再次輸入密碼"
           ></el-input>
         </el-form-item>
         <el-form-item>
@@ -150,7 +150,7 @@ watch(isRegister, () => {
             type="primary"
             auto-insert-space
           >
-            注册
+            註冊
           </el-button>
         </el-form-item>
         <el-form-item class="flex">
@@ -175,7 +175,8 @@ watch(isRegister, () => {
           <el-input
             v-model="formModel.username"
             :prefix-icon="User"
-            placeholder="请输入用户名"
+            placeholder="請輸入用戶名"
+            value="test5173"
           ></el-input>
         </el-form-item>
         <el-form-item prop="password">
@@ -184,13 +185,14 @@ watch(isRegister, () => {
             name="password"
             :prefix-icon="Lock"
             type="password"
-            placeholder="请输入密码"
+            placeholder="請輸入密碼"
+            value="test5173"
           ></el-input>
         </el-form-item>
         <el-form-item class="flex">
           <div class="flex">
-            <el-checkbox>记住我</el-checkbox>
-            <el-link type="primary" :underline="false">忘记密码？</el-link>
+            <el-checkbox>記住我</el-checkbox>
+            <el-link type="primary" :underline="false">忘記密碼?</el-link>
           </div>
         </el-form-item>
         <el-form-item>
@@ -199,12 +201,12 @@ watch(isRegister, () => {
             class="button"
             type="primary"
             auto-insert-space
-            >登录</el-button
+            >登入</el-button
           >
         </el-form-item>
         <el-form-item class="flex">
           <el-link type="info" :underline="false" @click="isRegister = true">
-            注册 →
+            註冊 →
           </el-link>
         </el-form-item>
       </el-form>

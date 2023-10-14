@@ -31,3 +31,7 @@ export const getPublicDetailService = (id) =>
 // 文章: 更新文章詳情   注意 data 需要是一個 formData 格式的對象
 export const editArticleDetailService = (data) =>
   request.put('/my/article/info', data)
+
+// 文章: 刪除文章詳情
+export const delArticleDetailService = (id) =>
+  request.delete('/my/article/info', { params: { id } })
