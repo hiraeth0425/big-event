@@ -50,12 +50,14 @@ const scccessFn = () => {
   getArticleList()
 }
 </script>
+
 <template>
   <pageContainer title="文章分類">
     <template #extra>
       <el-button type="primary" @click="addChannel">添加分類</el-button>
     </template>
     <!-- 主體部分是表格 -->
+    <!-- 測試布局 -->
     <el-table v-loading="loading" :data="articleList" style="width: 100%">
       <el-table-column type="index" label="序號" width="100"></el-table-column>
       <el-table-column prop="cate_name" label="分類名稱"></el-table-column>
@@ -79,7 +81,6 @@ const scccessFn = () => {
           ></el-button>
         </template>
       </el-table-column>
-
       <template #empty>
         <el-empty description="沒有數據"></el-empty>
       </template>
