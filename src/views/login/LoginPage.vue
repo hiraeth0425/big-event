@@ -130,8 +130,8 @@ const changeRemember = () => {
         (4) el-form-item => prop配置生效的是哪個校驗規則 (和rules中的字段要對應)
      -->
   <el-row class="login-page">
-    <el-col :span="12" class="bg"></el-col>
-    <el-col :span="6" :offset="3" class="form">
+    <el-col :span="12" :xs="24" class="bg"></el-col>
+    <el-col :span="6" :offset="3" :md="6" :xs="18" class="form">
       <!-- 註冊相關表單 -->
       <el-form
         :model="formModel"
