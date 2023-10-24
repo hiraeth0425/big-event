@@ -6,7 +6,9 @@ import { getUserInfoService } from '@/api/user.js'
 export const useUserStore = defineStore(
   'big-user',
   () => {
+    // Token 持久化
     const token = ref('')
+
     const setToken = (newToken) => {
       token.value = newToken
     }
