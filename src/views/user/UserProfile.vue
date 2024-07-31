@@ -51,6 +51,7 @@ const onSubmit = async () => {
   await UserInfoAction()
   // 提示用戶
   ElMessage.success('修改成功')
+  window.location.reload()
 }
 </script>
 

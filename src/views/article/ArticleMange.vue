@@ -6,6 +6,7 @@ import ArticleEdit from './components/ArticleEdit.vue'
 import { getArticleService, delArticleDetailService } from '@/api/article.js'
 import { formatTime } from '@/utils/format.js'
 import { ElMessage } from 'element-plus'
+import { useDebounceFn } from '@vueuse/core'
 
 const loading = ref(false)
 const articleList = ref([]) //文章列表
@@ -14,21 +15,21 @@ const totalPage = ref(0) //總條數
 const drawer = ref()
 
 // 發布文章
-const onPost = () => {
+const onPost = useDebounceFn(() => {
   drawer.value.open({})
-}
+}, 1500)
 
 // 編輯邏輯
-const onEditArticle = (row) => {
+const onEditArticle = useDebounceFn((row) => {
   drawer.value.open(row)
-}
+}, 1500)
 // 刪除邏輯
-const onDelArticle = async (row) => {
+const onDelArticle = useDebounceFn(async (row) => {
   // console.log(row)
   await delArticleDetailService(row.id)
   ElMessage.success('刪除成功')
   getArticleData(params.value)
-}
+}, 1500)
 
 // 定義請求參數對象
 // const cateId = ref(63255)

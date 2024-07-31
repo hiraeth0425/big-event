@@ -9,7 +9,7 @@ const onSelectMenu = (index) => {
 </script>
 
 <template>
-  <el-aside style="height: 100%" width="200px">
+  <el-aside style="height: 100%">
     <div class="el-aside__logo"></div>
     <!-- 主要區域容器 -->
     <el-menu

@@ -199,7 +199,7 @@ const changeRemember = () => {
           <el-input
             v-model="formModel.username"
             :prefix-icon="User"
-            placeholder="請輸入用戶名 已註冊測試帳號:test5173"
+            placeholder="請輸入用戶名，測試帳號:test666888"
           ></el-input>
         </el-form-item>
         <el-form-item prop="password">
@@ -208,7 +208,7 @@ const changeRemember = () => {
             name="password"
             :prefix-icon="Lock"
             type="password"
-            placeholder="請輸入密碼 已註冊測試密碼:test5173"
+            placeholder="請輸入密碼，測試密碼:123456"
           ></el-input>
         </el-form-item>
         <el-form-item class="flex">

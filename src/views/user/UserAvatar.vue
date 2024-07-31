@@ -27,6 +27,7 @@ const onUploadAvatar = async () => {
   await UserStore.UserInfoAction()
   // 提示用戶
   ElMessage.success('頭像更新成功')
+  window.location.reload()
 }
 </script>
 <template>

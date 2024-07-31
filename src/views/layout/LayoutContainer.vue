@@ -118,6 +118,7 @@ const handleActive = () => {
         </el-button>
         <el-drawer
           v-model="drawer"
+          class="side-drawer"
           title="I am the title"
           :with-header="false"
           direction="ltr"
@@ -125,6 +126,7 @@ const handleActive = () => {
         >
           <drawerMenu @drawerActive="handleActive"></drawerMenu>
         </el-drawer>
+
         <div>
           歡迎你回來 <strong>{{ nickname || username }}</strong>
         </div>
@@ -200,6 +202,16 @@ const handleActive = () => {
     justify-content: center;
     font-size: 14px;
     color: #666;
+  }
+  .el-overlay .el-drawer {
+    @media (max-width: 400px) {
+      display: none;
+    }
+  }
+  :deep(.side-drawer) {
+    @media (max-width: 400px) {
+      width: 80% !important;
+    }
   }
 }
 </style>
